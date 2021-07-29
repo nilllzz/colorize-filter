@@ -1,7 +1,3 @@
-export function test() {
-  return "Hello, World!";
-}
-
 /**
  * Generates a css filter value for the input hex color.
  */
