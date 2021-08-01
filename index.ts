@@ -1,7 +1,3 @@
-export function test() {
-  return "Hello, World!";
-}
-
 /**
  * Generates a css filter value for the input hex color.
  */
@@ -229,7 +225,7 @@ class Solver {
     const c = 15;
     const a = [60, 180, 18000, 600, 1.2, 1.2];
 
-    let best = { loss: Infinity };
+    let best: { loss: number, values: number[] } = { loss: Infinity, values: [] };
     for (let i = 0; best.loss > 25 && i < 3; i++) {
       const initial = [50, 20, 3750, 50, 100, 100];
       const result = this.spsa(A, a, c, initial, 1000);
@@ -240,7 +236,7 @@ class Solver {
     return best;
   }
 
-  solveNarrow(wide: any) {
+  solveNarrow(wide: { loss: number, values: number[] }) {
     const A = wide.loss;
     const c = 2;
     const A1 = A + 1;
@@ -248,15 +244,15 @@ class Solver {
     return this.spsa(A, a, c, wide.values, 500);
   }
 
-  spsa(A: number, a: number[], c: number, values: any, iters: number) {
+  spsa(A: number, a: number[], c: number, values: number[], iters: number) {
     const alpha = 1;
     const gamma = 0.16666666666666666;
 
-    let best = null;
+    let best: number[] = [];
     let bestLoss = Infinity;
-    const deltas = new Array(6);
-    const highArgs = new Array(6);
-    const lowArgs = new Array(6);
+    const deltas = new Array<number>(6);
+    const highArgs = new Array<number>(6);
+    const lowArgs = new Array<number>(6);
 
     for (let k = 0; k < iters; k++) {
       const ck = c / Math.pow(k + 1, gamma);
@@ -281,7 +277,7 @@ class Solver {
     }
     return { values: best, loss: bestLoss };
 
-    function fix(value: any, idx: any) {
+    function fix(value: number, idx: number) {
       let max = 100;
       if (idx === 2 /* saturate */) {
         max = 7500;
@@ -328,7 +324,7 @@ class Solver {
   }
 
   css(filters: number[]) {
-    function fmt(idx: any, multiplier = 1) {
+    function fmt(idx: number, multiplier = 1) {
       return Math.round(filters[idx] * multiplier);
     }
     return `invert(${fmt(0)}%) sepia(${fmt(1)}%) saturate(${fmt(
